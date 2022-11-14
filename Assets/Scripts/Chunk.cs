@@ -10,7 +10,7 @@ public class Chunk : MonoBehaviour
     
     private static readonly int ChunkWidth = 10;
     private static readonly int ChunkLength = 10;
-    private static readonly int ChunkHeight = 10;
+    private static readonly int ChunkHeight = 15;
     
     private readonly List<Vector3> _vertices = new List<Vector3>();
     private readonly List<int> _triangles = new List<int>();
@@ -46,7 +46,6 @@ public class Chunk : MonoBehaviour
                 var surfaceHeight = new Random().Next(ChunkHeight);
                 for (int y = 0; y < ChunkHeight; y++)
                 {
-                    // if((y == 0 || y == ChunkHeight - 1) || (z == 0 || z == ChunkWidth - 1))
                     if(y <= surfaceHeight)
                     {
                         world[x, y, z] = BlockType.Dirt;
@@ -101,8 +100,11 @@ public class Chunk : MonoBehaviour
                 _triangles.Add(vertexIndex + 2);
                 _triangles.Add(vertexIndex + 1);
                 _triangles.Add(vertexIndex + 3);
-                
-                // _uvs.Add()
+
+                _uvs.Add(VoxelData.BlockMeshUvs[0]);
+                _uvs.Add(VoxelData.BlockMeshUvs[1]);
+                _uvs.Add(VoxelData.BlockMeshUvs[2]);
+                _uvs.Add(VoxelData.BlockMeshUvs[3]);
             }
 
             // Declare vertices colors
@@ -157,12 +159,22 @@ public class Chunk : MonoBehaviour
         {
             vertices = _vertices.ToArray(),
             triangles = _triangles.ToArray(),
+            uv = _uvs.ToArray()
             // colors = _colors.ToArray()
         };
         mesh.RecalculateNormals();
+        mesh.RecalculateBounds();
+        mesh.Optimize();
+        
+        // Set index buffer to 32bits, which allow up to 2^32 vertices per mesh (default: 16bits)
+        // mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
         
         meshRenderer.material.color = Color.white;
         
         meshFilter.mesh = mesh;
+
+        Debug.Log("vertices: " + mesh.vertices.Length);
+        Debug.Log("triangles: " + mesh.triangles.Length);
+        Debug.Log("uvs: " + mesh.uv.Length);
     }
 }

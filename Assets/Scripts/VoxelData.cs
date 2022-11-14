@@ -32,11 +32,13 @@ public static class VoxelData
         {1, 5, 3, 7} // Right Face
     };
 
-    public static readonly Vector2[] BlockMeshUvs = new Vector2[4]
+    public static readonly Vector2[] BlockMeshUvs = new Vector2[6]
     {
         new Vector2(0, 0),
         new Vector2(0, 1),
         new Vector2(1, 0),
+        new Vector2(1, 0),
+        new Vector2(0, 1),
         new Vector2(1, 1)
     };
     
