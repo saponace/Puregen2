@@ -18,6 +18,14 @@ public class World : MonoBehaviour
         new() {name = "puihp", isSolid = false},
     };
     
+    public VoxelColor[] worldColors = {
+        new() {
+            color = Color.blue,
+            metallic = 1,
+            smoothness = 0.75f
+        }
+    };
+    
     [System.Serializable]
     public class BlockType
     {

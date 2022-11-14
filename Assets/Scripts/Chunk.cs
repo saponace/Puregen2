@@ -14,14 +14,17 @@ public class Chunk : MonoBehaviour
     
     private readonly List<Vector3> _vertices = new List<Vector3>();
     private readonly List<int> _triangles = new List<int>();
-    private readonly List<Color> _colors = new List<Color>();
     private readonly List<Vector2> _uvs = new List<Vector2>();
+    private readonly List<Color> _colors = new List<Color>();
+    private readonly List<Vector2> _uvs2 = new List<Vector2>();
+    
+    
 
     readonly BlockType[,,] _worldContent;
     
     private World _world;
 
-    
+
     public Chunk()
     {
         _worldContent = CreateWorld();
@@ -46,6 +49,10 @@ public class Chunk : MonoBehaviour
                 var surfaceHeight = new Random().Next(ChunkHeight);
                 for (int y = 0; y < ChunkHeight; y++)
                 {
+                    if(y <= 2)
+                    {
+                        world[x, y, z] = BlockType.Stone;
+                    } else
                     if(y <= surfaceHeight)
                     {
                         world[x, y, z] = BlockType.Dirt;
@@ -79,6 +86,12 @@ public class Chunk : MonoBehaviour
 
     private void CreateBlockMeshData(Vector3Int position)
     {
+        var color = _world.worldColors[0];
+        var colorAlpha = GetBlockColor(GetBlock(position));
+        colorAlpha.a = 1f;
+        var smoothness = new Vector2(color.metallic, color.smoothness);
+
+
         for (var face = 0; face < 6; face++)
         {
             if (ShouldDrawBlockFace(position, face))
@@ -105,6 +118,12 @@ public class Chunk : MonoBehaviour
                 _uvs.Add(VoxelData.BlockMeshUvs[1]);
                 _uvs.Add(VoxelData.BlockMeshUvs[2]);
                 _uvs.Add(VoxelData.BlockMeshUvs[3]);
+
+                for (int i = 0; i < 4; i++)
+                {
+                    _colors.Add(colorAlpha);
+                    _uvs2.Add(smoothness);
+                }
             }
 
             // Declare vertices colors
@@ -159,8 +178,9 @@ public class Chunk : MonoBehaviour
         {
             vertices = _vertices.ToArray(),
             triangles = _triangles.ToArray(),
-            uv = _uvs.ToArray()
-            // colors = _colors.ToArray()
+            uv = _uvs.ToArray(),
+            uv2 = _uvs2.ToArray(),
+            colors = _colors.ToArray(),
         };
         mesh.RecalculateNormals();
         mesh.RecalculateBounds();
@@ -169,12 +189,19 @@ public class Chunk : MonoBehaviour
         // Set index buffer to 32bits, which allow up to 2^32 vertices per mesh (default: 16bits)
         // mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
         
-        meshRenderer.material.color = Color.white;
         
         meshFilter.mesh = mesh;
 
         Debug.Log("vertices: " + mesh.vertices.Length);
         Debug.Log("triangles: " + mesh.triangles.Length);
         Debug.Log("uvs: " + mesh.uv.Length);
+        Debug.Log("uvs2: " + mesh.uv2.Length);
+        Debug.Log("color: " + mesh.colors.Length);
+        Debug.Log("uvs2: " + mesh.uv2[0]);
+        Debug.Log("uvs2: " + mesh.uv2[1]);
+        Debug.Log("uvs2: " + mesh.uv2[2]);
+        Debug.Log("colors: " + mesh.colors[0]);
+        Debug.Log("colors: " + mesh.colors[1]);
+        Debug.Log("colors: " + mesh.colors[2]);
     }
 }

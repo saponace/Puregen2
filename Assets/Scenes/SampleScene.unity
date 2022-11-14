@@ -169,7 +169,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   material: {fileID: 0}
   blockTypes:
-  - name: Stone
+  - name: 'wd awd awd '
     isSolid: 1
   - name: Dirt
     isSolid: 1
