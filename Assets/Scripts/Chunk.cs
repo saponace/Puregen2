@@ -72,7 +72,7 @@ public class Chunk : MonoBehaviour
         {
             return _world.blockTypes[(int)GetBlock(position)].isSolid;
         }
-        catch (Exception)
+        catch (IndexOutOfRangeException)
         {
             // Outside of world boundaries
             return false;
@@ -119,19 +119,13 @@ public class Chunk : MonoBehaviour
                 _uvs.Add(VoxelData.BlockMeshUvs[2]);
                 _uvs.Add(VoxelData.BlockMeshUvs[3]);
 
+                // Set UV2 and color for each vertex (4) of the cube face
                 for (int i = 0; i < 4; i++)
                 {
                     _colors.Add(colorAlpha);
                     _uvs2.Add(smoothness);
                 }
             }
-
-            // Declare vertices colors
-            // var blockColor = GetBlockColor(GetBlock(position));
-            // _colors.Add(blockColor);
-            // _colors.Add(blockColor);
-            // _colors.Add(blockColor);
-            // _colors.Add(blockColor);
         }
     }
 
